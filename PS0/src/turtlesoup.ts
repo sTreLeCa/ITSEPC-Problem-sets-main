@@ -13,11 +13,11 @@ export function drawSquare(turtle: Turtle, sideLength: number): void {
   turtle.forward(sideLength);
   turtle.turn(90);
   turtle.forward(sideLength);
-  turtle.turn(180);
+  turtle.turn(90);
   turtle.forward(sideLength);
   turtle.turn(90);
   turtle.forward(sideLength);
-  turtle.turn(400);
+  turtle.turn(90);
 }
 
 /**
@@ -29,7 +29,8 @@ export function drawSquare(turtle: Turtle, sideLength: number): void {
  */
 export function chordLength(radius: number, angleInDegrees: number): number {
   // TODO: Implement chordLength
-  return 0; // Placeholder - replace with your implementation
+  
+  return +(2 * radius * Math.sin((angleInDegrees * Math.PI)/360)).toFixed(4); // Placeholder - replace with your implementation
 }
 
 /**
@@ -45,6 +46,13 @@ export function drawApproximateCircle(
   numSides: number
 ): void {
   // TODO: Implement drawApproximateCircle
+ turtle.forward(radius);
+  for (let i = 0; i < numSides; i++) {
+    turtle.turn(360/numSides);
+    turtle.forward(chordLength(radius, 360/numSides
+    ));
+  }
+
 }
 
 /**
@@ -55,7 +63,7 @@ export function drawApproximateCircle(
  */
 export function distance(p1: Point, p2: Point): number {
   // TODO: Implement distance
-  return 0; // Placeholder
+  return Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);; // Placeholder
 }
 
 /**
@@ -68,8 +76,17 @@ export function distance(p1: Point, p2: Point): number {
  *          The function primarily needs to *calculate* the path conceptually.
  */
 export function findPath(turtle: Turtle, points: Point[]): string[] {
-  // TODO: Implement findPath (conceptually, you don't need to *execute* the path here)
-  return []; // Placeholder
+  let ans = []
+ // TODO: Implement findPath (conceptually, you don't need to *execute* the path here)
+ for(let i = 0; i < points.length-1; i++){
+   let angle = Math.atan2(points[i].y - turtle.getPosition().y, points[i].x - turtle.getPosition().x) * 180 / Math.PI;
+   ans.push("turn " + angle + " ");
+   turtle.turn(angle);
+   turtle.forward(distance(turtle.getPosition(), points[i]));
+   ans.push("forward " + distance(turtle.getPosition(), points[i]) + " ");
+ }
+
+ return ans; // Placeholder
 }
 
 /**
@@ -82,10 +99,46 @@ export function findPath(turtle: Turtle, points: Point[]): string[] {
 export function drawPersonalArt(turtle: Turtle): void {
   // TODO: Implement drawPersonalArt
   // Example - replace with your own art!
-  for (let i = 0; i < 6; i++) {
-    turtle.forward(50);
-    turtle.turn(60);
-  }
+
+  turtle.forward(100);
+  turtle.turn(180);
+  turtle.forward(100);
+  turtle.turn(-120);
+  turtle.forward(100);
+  turtle.turn(180);
+  turtle.forward(50);
+  turtle.turn(60);
+  turtle.forward(50);
+  turtle.turn(60);
+  turtle.forward(50);
+  turtle.turn(20);
+  turtle.forward(70);
+  turtle.turn(-90);
+  turtle.forward(50);
+  turtle.turn(-5);
+  turtle.forward(50);
+  turtle.turn(180);
+  turtle.forward(50);
+  turtle.turn(90);
+  turtle.forward(50);
+  turtle.turn(90);
+  turtle.forward(50);
+  turtle.turn(180);
+  turtle.forward(50);
+  turtle.turn(90);
+  turtle.forward(50);
+  turtle.turn(90);
+  turtle.forward(50);
+  turtle.turn(180);
+  turtle.forward(50);
+  turtle.turn(120);
+  turtle.forward(100);
+  turtle.turn(180);
+  turtle.forward(50);
+  turtle.turn(120);
+  turtle.forward(50);
+  turtle.turn(180);
+  turtle.forward(100);
 }
 
 function generateHTML(
@@ -162,7 +215,7 @@ export function main(): void {
   // console.log("Chord length for radius 5, angle 60 degrees:", chordLength(5, 60));
 
   // Draw an approximate circle
-  // drawApproximateCircle(turtle, 50, 360);
+   drawApproximateCircle(turtle, 50, 360);
 
   // Example distance calculation (for testing in console)
   // const p1: Point = {x: 1, y: 2};
@@ -170,13 +223,12 @@ export function main(): void {
   // console.log("Distance between p1 and p2:", distance(p1, p2));
 
   // Example findPath (conceptual - prints path to console)
-  // const pointsToVisit: Point[] = [{x: 20, y: 20}, {x: 80, y: 20}, {x: 80, y: 80}];
-  // const pathInstructions = findPath(turtle, pointsToVisit);
-  // console.log("Path instructions:", pathInstructions);
+  const pointsToVisit: Point[] = [{x: 20, y: 20}, {x: 80, y: 20}, {x: 80, y: 80}];
+  const pathInstructions = findPath(turtle, pointsToVisit);
+  console.log("Path instructions:", pathInstructions);
 
   // Draw personal art
-  // drawPersonalArt(turtle);
-
+   drawPersonalArt(turtle);
   const htmlContent = generateHTML((turtle as SimpleTurtle).getPath()); // Cast to access getPath
   saveHTMLToFile(htmlContent);
   openHTML();
